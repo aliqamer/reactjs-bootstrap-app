@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import "./App.css";
 import Axios from "axios";
+import TopNav from "./components/TopNav";
+import Home from "./components/Home";
+import Footer from "./components/Footer";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class App extends Component {
   constructor(props) {
@@ -18,7 +22,21 @@ class App extends Component {
   }
 
   render() {
-    return <div className="App"></div>;
+    if (this.state.vehicleData) {
+      return (
+        <Router>
+          <div className="App">
+            <TopNav />
+            <div className="contentAread">
+              <Route exact path="/" component={Home} />
+            </div>
+            <Footer />
+          </div>
+        </Router>
+      );
+    } else {
+      return <h4>Loading Data...</h4>;
+    }
   }
 }
 

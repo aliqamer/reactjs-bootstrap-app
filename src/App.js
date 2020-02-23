@@ -26,7 +26,7 @@ class App extends Component {
       return (
         <Router>
           <div className="App">
-            <TopNav />
+            <TopNav vehicleData={this.state.vehicleData} />
             <div className="contentAread">
               <Route exact path="/" component={Home} />
             </div>

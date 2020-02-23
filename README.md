@@ -70,4 +70,11 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/tr
 ---
 
 start json-server
-json-server --port 3001 --watch db.json
+
+### json-server --port 3001 --watch db.json
+
+generate faker data
+
+### json-server --port 3001 generate.js
+
+### https://learning.oreilly.com/videos/hands-on-application-development/9781789531381

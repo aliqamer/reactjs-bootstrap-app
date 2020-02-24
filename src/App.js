@@ -28,7 +28,13 @@ class App extends Component {
           <div className="App">
             <TopNav vehicleData={this.state.vehicleData} />
             <div className="contentAread">
-              <Route exact path="/" component={Home} />
+              <Route
+                exact
+                path="/"
+                render={props => (
+                  <Home {...props} vehicleData={this.state.vehicleData} />
+                )}
+              />
             </div>
             <Footer />
           </div>

@@ -4,6 +4,7 @@ import Axios from "axios";
 import TopNav from "./components/TopNav";
 import Home from "./components/Home";
 import Footer from "./components/Footer";
+import DealerLocator from "./components/DealerLocator";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class App extends Component {
@@ -35,6 +36,7 @@ class App extends Component {
                   <Home {...props} vehicleData={this.state.vehicleData} />
                 )}
               />
+              <Route path="/find-a-dealer" component={DealerLocator} />
             </div>
             <Footer />
           </div>

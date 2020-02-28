@@ -21,14 +21,26 @@ class DealerLocator extends React.Component {
     this.state = { searchTerm: "", dealerships: null };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.onClearClicked = this.onClearClicked.bind(this);
+    this.onListClick = this.onListClick.bind(this);
   }
 
   componentDidMount() {
     Axios.get("http://localhost:3001/dealerships")
       .then(res => {
-        this.setState({ dealerships: res.data });
+        let stateCounter = res.data.reduce(function(dealerStateCount, dealer) {
+          dealerStateCount[dealer.state] =
+            (dealerStateCount[dealer.state] || 0) + 1;
+          return dealerStateCount;
+        }, this);
+        this.setState({ dealerships: res.data, stateCounter: stateCounter });
       })
       .catch(err => console.log(err));
+  }
+
+  onListClick(eventData) {
+    eventData.preventDefault();
+    const stateClicked = eventData.target.text.split(" ")[0];
+    this.setState({ searchTerm: stateClicked });
   }
 
   handleInputChange(eventData) {
@@ -74,43 +86,80 @@ class DealerLocator extends React.Component {
         </div>
       );
 
-      return (
-        <div>
-          {seachBar}
-          <Row>
-            <Col sm={12} md={{ size: 10, offset: 1 }}>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Dealership</th>
-                    <th>Address</th>
-                    <th>City</th>
-                    <th>State</th>
-                    <th>Zip</th>
-                    <th>Phone</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredStubData.map((item, i) => {
-                    return (
-                      <tr key={item.phone}>
-                        <td>{String(i)}</td>
-                        <td>{item.dealershipName}</td>
-                        <td>{item.address}</td>
-                        <td>{item.city}</td>
-                        <td>{item.state}</td>
-                        <td>{item.zip}</td>
-                        <td>{item.phone}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </Table>
-            </Col>
-          </Row>
-        </div>
-      );
+      if (this.state.searchTerm.length < 4) {
+        let stateCounterMarkup = null;
+        if (this.state.stateCounter) {
+          stateCounterMarkup = (
+            <Row>
+              <Col sm={12} md={{ size: 10, offset: 1 }}>
+                <ListGroup>
+                  {Object.keys(this.state.stateCounter)
+                    .sort()
+                    .map(function(key, i) {
+                      if (typeof this.state.stateCounter[key] === "number") {
+                        return (
+                          <ListGroupItem
+                            tag="a"
+                            href="#"
+                            onClick={this.onListClick}
+                            className="justify-content-between"
+                          >
+                            {key}{" "}
+                            <Badge pill>{this.state.stateCounter[key]}</Badge>
+                          </ListGroupItem>
+                        );
+                      }
+                    }, this)}
+                </ListGroup>
+              </Col>
+            </Row>
+          );
+        }
+        return (
+          <div>
+            {seachBar}
+            {stateCounterMarkup}
+          </div>
+        );
+      } else {
+        return (
+          <div>
+            {seachBar}
+            <Row>
+              <Col sm={12} md={{ size: 10, offset: 1 }}>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Dealership</th>
+                      <th>Address</th>
+                      <th>City</th>
+                      <th>State</th>
+                      <th>Zip</th>
+                      <th>Phone</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredStubData.map((item, i) => {
+                      return (
+                        <tr key={item.phone}>
+                          <td>{String(i)}</td>
+                          <td>{item.dealershipName}</td>
+                          <td>{item.address}</td>
+                          <td>{item.city}</td>
+                          <td>{item.state}</td>
+                          <td>{item.zip}</td>
+                          <td>{item.phone}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </Col>
+            </Row>
+          </div>
+        );
+      }
     } else {
       return null;
     }

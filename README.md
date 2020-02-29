@@ -78,3 +78,9 @@ generate faker data
 ### json-server --port 3001 generate.js
 
 ### https://learning.oreilly.com/videos/hands-on-application-development/9781789531381
+
+
+## run with docker
+docker build -t react-webapp .
+
+docker run -it -p 8000:80 react-webapp
